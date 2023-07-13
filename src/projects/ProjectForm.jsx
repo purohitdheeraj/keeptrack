@@ -1,6 +1,9 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-function ProjectForm() {
+function ProjectForm(props) {
+	const { onCancel } = props;
+
 	return (
 		<form className="input-group vertical">
 			<label htmlFor="name">Project Name</label>
@@ -32,12 +35,20 @@ function ProjectForm() {
 					Save
 				</button>
 				<span />
-				<button type="button" className="bordered medium">
+				<button
+					onClick={onCancel}
+					type="button"
+					className="bordered medium"
+				>
 					cancel
 				</button>
 			</div>
 		</form>
 	);
 }
+
+ProjectForm.propTypes = {
+	onCancel: PropTypes.func.isRequired,
+};
 
 export default ProjectForm;
