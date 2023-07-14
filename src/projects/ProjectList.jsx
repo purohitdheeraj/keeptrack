@@ -36,7 +36,6 @@ function ProjectList(props) {
 
 	return (
 		<section>
-			ProjectList
 			<div className="row">{projectsEl}</div>
 		</section>
 	);
