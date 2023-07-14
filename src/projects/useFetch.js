@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Project } from "./Project";
 
 export const useFetch = (url, limit) => {
 	const [data, setData] = useState(null);
@@ -21,7 +22,11 @@ export const useFetch = (url, limit) => {
 					throw new Error(response.statusText);
 				}
 				const parseResponse = await response.json();
-				setData(parseResponse);
+				setData(() =>
+					parseResponse.map(
+						(project) => new Project(project)
+					)
+				);
 			} catch (err) {
 				if (err.name === "AbortError") {
 					setAborted(true);
@@ -39,5 +44,5 @@ export const useFetch = (url, limit) => {
 		return () => controller.abort();
 	}, [limit, url]);
 
-	return { data, error, loading, aborted };
+	return { data, error, loading, aborted, setData };
 };

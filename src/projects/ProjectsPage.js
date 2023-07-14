@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { MOCK_PROJECTS } from "./MockProjects.js";
+import React from "react";
+// import { MOCK_PROJECTS } from "./MockProjects.js";
 import ProjectList from "./ProjectList.jsx";
 import { useFetch } from "./useFetch.js";
 
 function ProjectsPage() {
-	const [projects, setProjects] = useState(MOCK_PROJECTS);
+	// const [projects, setProjects] = useState(MOCK_PROJECTS);
 	const URL = `http://localhost:4000/projects`;
 	const limit = 20;
 
@@ -13,15 +13,16 @@ function ProjectsPage() {
 		loading,
 		data: projectsData,
 		aborted,
+		setData,
 	} = useFetch(URL, limit);
 
 	const onSave = (newProjectData) => {
-		const updatedProjects = projects.map((project) => {
+		const updatedProjects = projectsData.map((project) => {
 			return project.id === newProjectData.id
 				? newProjectData
 				: project;
 		});
-		setProjects(updatedProjects);
+		setData(updatedProjects);
 	};
 
 	return (
