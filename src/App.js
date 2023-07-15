@@ -1,5 +1,9 @@
 import { Home } from "./components";
 import "./App.css";
+import {
+	CSSTransition,
+	TransitionGroup,
+} from "react-transition-group";
 
 import ProjectsPage from "./projects/ProjectsPage";
 import {
@@ -7,13 +11,15 @@ import {
 	Route,
 	BrowserRouter as Router,
 	NavLink,
+	useLocation,
 } from "react-router-dom";
-import ProjectDetail from "./projects/ProjectDetail";
+
 import ProjectPage from "./projects/ProjectPage";
 
 function App() {
+	let location = useLocation();
 	return (
-		<Router>
+		<>
 			<header className="sticky">
 				<span className="logo">
 					<img
@@ -31,21 +37,28 @@ function App() {
 					Projects
 				</NavLink>
 			</header>
-			;
 			<div className="container">
-				<Routes>
-					<Route path="/" element={<Home />}></Route>
-					<Route
-						path="/projects"
-						element={<ProjectsPage />}
-					></Route>
-					<Route
-						path="/projects/:id"
-						element={<ProjectPage />}
-					/>
-				</Routes>
+				<TransitionGroup>
+					<CSSTransition
+						key={location.key}
+						classNames="fade"
+						timeout={{ enter: 400, exit: 200 }}
+					>
+						<Routes location={location}>
+							<Route path="/" element={<Home />}></Route>
+							<Route
+								path="/projects"
+								element={<ProjectsPage />}
+							></Route>
+							<Route
+								path="/projects/:id"
+								element={<ProjectPage />}
+							/>
+						</Routes>
+					</CSSTransition>
+				</TransitionGroup>
 			</div>
-		</Router>
+		</>
 	);
 }
 
