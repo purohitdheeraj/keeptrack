@@ -3,6 +3,7 @@ import { Project } from "./Project";
 import PropTypes from "prop-types";
 import ProjectCard from "./ProjectCard";
 import ProjectForm from "./ProjectForm";
+import { Link } from "react-router-dom";
 
 function ProjectList(props) {
 	const { projects, onSave } = props;
@@ -26,10 +27,12 @@ function ProjectList(props) {
 					project={project}
 				/>
 			) : (
-				<ProjectCard
-					project={project}
-					onEdit={handleEdit}
-				/>
+				<Link to={`./${project.id}`}>
+					<ProjectCard
+						project={project}
+						onEdit={handleEdit}
+					/>
+				</Link>
 			)}
 		</div>
 	));

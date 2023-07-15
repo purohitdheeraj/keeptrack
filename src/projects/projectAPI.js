@@ -79,6 +79,11 @@ const projectAPI = {
         There was an error updating the project. Please Try again`);
 			});
 	},
+	find(id) {
+		return fetch(`${url}/${id}`)
+			.then(checkStatus)
+			.then(parseJSON);
+	},
 };
 
 export { projectAPI };
