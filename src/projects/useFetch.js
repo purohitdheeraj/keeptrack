@@ -1,48 +1,31 @@
-import { useEffect, useState } from "react";
-import { Project } from "./Project";
+import { useCallback, useEffect, useState } from "react";
+import { projectAPI } from "./projectAPI";
 
-export const useFetch = (url, limit) => {
+export const useFetch = (page = 1) => {
 	const [data, setData] = useState(null);
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
-	const [aborted, setAborted] = useState(false);
+	const [error, setError] = useState(undefined);
+
+	const loadData = useCallback(async () => {
+		setLoading(true);
+		try {
+			const projectData = await projectAPI.get(page);
+			setError(null);
+			if (page === 1) {
+				setData(projectData);
+			} else {
+				setData((prev) => [...prev, ...projectData]);
+			}
+		} catch (error) {
+			setError(error.message);
+		} finally {
+			setLoading(false);
+		}
+	}, [page]);
 
 	useEffect(() => {
-		const controller = new AbortController();
-		async function loadData() {
-			try {
-				setLoading(true);
-				const response = await fetch(
-					`${url}?_limit=${limit}`,
-					{
-						signal: controller.signal,
-					}
-				);
-				if (!response.ok) {
-					throw new Error(response.statusText);
-				}
-				const parseResponse = await response.json();
-				setData(() =>
-					parseResponse.map(
-						(project) => new Project(project)
-					)
-				);
-			} catch (err) {
-				if (err.name === "AbortError") {
-					setAborted(true);
-				} else {
-					setError(err);
-				}
-			} finally {
-				setLoading(false);
-				setAborted(false);
-			}
-		}
-
 		loadData();
+	}, [loadData]);
 
-		return () => controller.abort();
-	}, [limit, url]);
-
-	return { data, error, loading, aborted, setData };
+	return { data, error, loading, setData, setError };
 };
